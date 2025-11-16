@@ -1,0 +1,9 @@
+# Terraform directories
+.terraform/
+
+# State files (never commit)
+*.tfstate
+*.tfstate.backup
+
+# Lockfile (optional to ignore)
+.terraform.lock.hcl
