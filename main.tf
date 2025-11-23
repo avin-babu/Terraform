@@ -4,28 +4,16 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "terraform-s3-bucket-31102025"
-    key = "dev/terraform.tfstate"
-    region = "ap-south-1"
-    encrypt = true
-    local_file_lock_table = "terraform-lock-table-31102025"
+    bucket         = "terraform-s3-bucket-31102025 "
+    key            = "dev/terraform.tfstate"
+    region         = "ap-south-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
   }
 }
 
 
 
-# S3 Bucket for Terraform State
-resource "aws_s3_bucket" "tf_state" {
-  bucket = "avin-terraform-state-bucket"
-}
-
-resource "aws_s3_bucket_versioning" "versioning" {
-  bucket = aws_s3_bucket.tf_state.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
 
 # DynamoDB Table for State Locking
 resource "aws_dynamodb_table" "tf_lock" {
