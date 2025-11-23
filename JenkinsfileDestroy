@@ -7,9 +7,11 @@ pipeline {
 
     stages {
 
-        stage('Terraform Validate') {
+        stage('Terraform resources Destruction') {
             steps {
-                bat 'terraform destroy -auto-approve'
+                withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    bat 'terraform destroy -auto-approve'
+                }
             }
         }
 
