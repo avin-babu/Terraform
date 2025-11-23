@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    environment {
+        TF_IN_AUTOMATION = "true"
+    }
+
+    stages {
+
+        stage('Terraform Validate') {
+            steps {
+                bat 'terraform destroy -auto-approve'
+            }
+        }
+
+        
+
+        stage('Post Apply Actions') {
+            steps {
+                withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    bat 'terraform state list'
+                }
+            }
+        }
+    }
+}
