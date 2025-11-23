@@ -18,12 +18,12 @@ resource "tls_private_key" "keygen" {
 }
 
 resource "aws_key_pair" "terraform_key" {
-  key_name = "terraform-key"
+  key_name = "terraform-key-new"
   public_key = tls_private_key.keygen.public_key_openssh
 }
 
 resource "local_file" "private_key_pem" {
-  filename = "${path.module}/terraform-key.pem"
+  filename = "${path.module}/terraform-key-new.pem"
   content  = tls_private_key.keygen.private_key_pem
   file_permission = "0400"
 }
@@ -115,7 +115,7 @@ resource "aws_instance" "ec2-instance" {
     instance_type = "t3.micro"
     subnet_id = aws_subnet.name.id
     vpc_security_group_ids = [ aws_security_group.security_group.id ]
-    key_name = "terraform-key"
+    key_name = "terraform-key-new"
 
     user_data = <<-EOF
               #!/bin/bash
