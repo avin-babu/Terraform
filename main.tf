@@ -7,26 +7,10 @@ terraform {
     bucket         = "terraform-s3-bucket-31102025 "
     key            = "dev/terraform.tfstate"
     region         = "ap-south-1"
-    dynamodb_table = "terraform-locks"
+    use_lockfile = true
     encrypt        = true
   }
 }
-
-
-
-
-# DynamoDB Table for State Locking
-resource "aws_dynamodb_table" "tf_lock" {
-  name         = "terraform-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-}
-
 
 resource "tls_private_key" "keygen" {
   rsa_bits = 4096
