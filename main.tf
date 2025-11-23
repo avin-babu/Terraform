@@ -2,6 +2,43 @@ provider "aws" {
     region = "ap-south-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "terraform-s3-bucket-31102025"
+    key = "dev/terraform.tfstate"
+    region = "ap-south-1"
+    encrypt = true
+    local_file_lock_table = "terraform-lock-table-31102025"
+  }
+}
+
+
+
+# S3 Bucket for Terraform State
+resource "aws_s3_bucket" "tf_state" {
+  bucket = "avin-terraform-state-bucket"
+}
+
+resource "aws_s3_bucket_versioning" "versioning" {
+  bucket = aws_s3_bucket.tf_state.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# DynamoDB Table for State Locking
+resource "aws_dynamodb_table" "tf_lock" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
 
 resource "tls_private_key" "keygen" {
   rsa_bits = 4096
