@@ -16,21 +16,21 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
-                    sh 'terraform init'
+                    bat 'terraform init'
                 }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                bat 'terraform validate'
             }
         }
 
         stage('Terraform Plan') {
             steps {
                 withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
-                    sh 'terraform plan -out=tfplan'
+                    bat 'terraform plan -out=tfplan'
                 }
             }
         }
@@ -46,17 +46,16 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
-                    sh 'terraform apply -auto-approve'
+                    bat 'terraform apply -auto-approve'
                 }
             }
         }
 
         stage('Post Apply Actions') {
             steps {
-                sh '''
-                    teraform state list
-                '''
-                echo 'Terraform apply completed successfully.'
+                withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    bat 'terraform state list'
+                }
             }
         }
     }
